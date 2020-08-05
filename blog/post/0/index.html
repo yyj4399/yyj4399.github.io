@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans"><head><meta name="generator" content="React Static"/><meta charSet="UTF-8"/><meta name="keywords" content="博客,yyj4399,yyj4399,逐风的雪,坠入银河,时光梦境,孤独之域"/><meta name="description" content="码农，这是我的个人站点"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="author" content="yyj4399,1097575802@qq.com"/><meta name="generator" content="Visual Studio Code,React,React-Static"/><meta name="copyright" content="yyj4399"/><meta name="revisit-after" content="3 days"/><meta name="renderer" content="webkit"/><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/><meta http-equiv="cache-control" content="no-cache"/><meta http-equiv="Cache-Control" content="no-siteapp"/><link rel="preload" as="script" href="/templates/vendors~__react_static_root__/src/containers/Post.3648edea.js"/><link rel="preload" as="script" href="/templates/__react_static_root__/src/containers/Post.97c37518.js"/><link rel="preload" as="script" href="/templates/styles.ddeb0f74.js"/><link rel="preload" as="script" href="/templates/vendors~main.3d624541.js"/><link rel="preload" as="script" href="/main.16a53e10.js"/><link rel="preload" as="style" href="/styles.4ae8cb5f.css"/><link rel="stylesheet" href="/styles.4ae8cb5f.css"/></head><body><div id="root"><div style="outline:none" tabindex="-1"><nav><a href="/">Home</a><a href="/blog">Blog</a><a href="https://github.com/yyj4399">github</a></nav><div class="content"><div style="outline:none" tabindex="-1"><div><a href="/blog/">&lt;<!-- --> Back</a><br/><h1>nodejs递归遍历md文件</h1><h2>nodejs遍历md文件，并生成博客列表</h2><p>我的新版博客打算使用<code>react-static</code>+<code>markdown</code>，所以写了个递归遍历<code>md</code>文件的方法。</p><pre><code class="language-js">var id = 0;
+
+function readFileList(dir, filesList = []) {
+    // 列出所有文件或目录
+    const files = fs.readdirSync(dir);
+    // 遍历
+    files.forEach((item, index) =&gt; {
+        // 计算绝对路径
+        var fullPath = path.join(dir, item);
+        // 获取状态
+        const stat = fs.statSync(fullPath);
+        // 如果是目录
+        if (stat.isDirectory()) {
+            // 递归
+            readFileList(path.join(dir, item), filesList);
+        } else {
+            // 否则是文件 判断文件后缀名
+            if (item.slice(-3).toLowerCase() == &quot;.md&quot;) {
+                // 文件分隔符
+                fullPath = fullPath.replace(/\\/g, &quot;/&quot;);
+                // 分割
+                var path_sp = fullPath.split(&quot;/&quot;);
+                // 添加到列表
+                filesList.push({
+                    id: id++,
+                    userId: 1,
+                    title: item.slice(0, -3),
+                    year: path_sp[path_sp.length - 3],
+                    month: path_sp[path_sp.length - 2],
+                    path: fullPath,
+                    body: fs.readFileSync(fullPath).toString(),
+                });
+            }
+        }
+    });
+    return filesList;
+}
+// 实参
+var blog_md_list = [];
+// 递归遍历md文件
+readFileList(path.join(__dirname, &quot;public&quot;, &quot;md&quot;), blog_md_list);</code></pre></div></div></div></div></div><script type="text/javascript">window.__routeInfo = JSON.parse("{\"template\":\"__react_static_root__/src/containers/Post\",\"sharedHashesByProp\":{},\"data\":{\"post\":{\"id\":0,\"userId\":1,\"title\":\"nodejs\u9012\u5F52\u904D\u5386md\u6587\u4EF6\",\"year\":\"2020\",\"month\":\"7\",\"path\":\"D:/phpstudy_pro/WWW/xiaoxiao/cat/src/md/2020/7/nodejs\u9012\u5F52\u904D\u5386md\u6587\u4EF6.md\",\"body\":\"## nodejs\u904D\u5386md\u6587\u4EF6\uFF0C\u5E76\u751F\u6210\u535A\u5BA2\u5217\u8868\\r\\n\\r\\n\u6211\u7684\u65B0\u7248\u535A\u5BA2\u6253\u7B97\u4F7F\u7528`react-static`+`markdown`\uFF0C\u6240\u4EE5\u5199\u4E86\u4E2A\u9012\u5F52\u904D\u5386`md`\u6587\u4EF6\u7684\u65B9\u6CD5\u3002\\r\\n\\r\\n``` js\\r\\nvar id = 0;\\r\\n\\r\\nfunction readFileList(dir, filesList = []) {\\r\\n    // \u5217\u51FA\u6240\u6709\u6587\u4EF6\u6216\u76EE\u5F55\\r\\n    const files = fs.readdirSync(dir);\\r\\n    // \u904D\u5386\\r\\n    files.forEach((item, index) => {\\r\\n        // \u8BA1\u7B97\u7EDD\u5BF9\u8DEF\u5F84\\r\\n        var fullPath = path.join(dir, item);\\r\\n        // \u83B7\u53D6\u72B6\u6001\\r\\n        const stat = fs.statSync(fullPath);\\r\\n        // \u5982\u679C\u662F\u76EE\u5F55\\r\\n        if (stat.isDirectory()) {\\r\\n            // \u9012\u5F52\\r\\n            readFileList(path.join(dir, item), filesList);\\r\\n        } else {\\r\\n            // \u5426\u5219\u662F\u6587\u4EF6 \u5224\u65AD\u6587\u4EF6\u540E\u7F00\u540D\\r\\n            if (item.slice(-3).toLowerCase() == \\\".md\\\") {\\r\\n                // \u6587\u4EF6\u5206\u9694\u7B26\\r\\n                fullPath = fullPath.replace(/\\\\\\\\/g, \\\"/\\\");\\r\\n                // \u5206\u5272\\r\\n                var path_sp = fullPath.split(\\\"/\\\");\\r\\n                // \u6DFB\u52A0\u5230\u5217\u8868\\r\\n                filesList.push({\\r\\n                    id: id++,\\r\\n                    userId: 1,\\r\\n                    title: item.slice(0, -3),\\r\\n                    year: path_sp[path_sp.length - 3],\\r\\n                    month: path_sp[path_sp.length - 2],\\r\\n                    path: fullPath,\\r\\n                    body: fs.readFileSync(fullPath).toString(),\\r\\n                });\\r\\n            }\\r\\n        }\\r\\n    });\\r\\n    return filesList;\\r\\n}\\r\\n// \u5B9E\u53C2\\r\\nvar blog_md_list = [];\\r\\n// \u9012\u5F52\u904D\u5386md\u6587\u4EF6\\r\\nreadFileList(path.join(__dirname, \\\"public\\\", \\\"md\\\"), blog_md_list);\\r\\n```\\r\\n\"}},\"path\":\"blog/post/0\",\"sharedData\":{},\"siteData\":{}}");</script><script defer="" type="text/javascript" src="/templates/vendors~__react_static_root__/src/containers/Post.3648edea.js"></script><script defer="" type="text/javascript" src="/templates/__react_static_root__/src/containers/Post.97c37518.js"></script><script defer="" type="text/javascript" src="/templates/styles.ddeb0f74.js"></script><script defer="" type="text/javascript" src="/templates/vendors~main.3d624541.js"></script><script defer="" type="text/javascript" src="/main.16a53e10.js"></script></body></html>
