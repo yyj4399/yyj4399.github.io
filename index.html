@@ -55,14 +55,136 @@
 
   
     
-    <h3 class="article-title"><a href="/2020/08/06/响应式布局/"><span>如何使用响应式布局</span></a></h3>
+    <h3 class="article-title"><a href="/2020/08/06/react-static-html头部meta问题/"><span>react-static html头部meta问题</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/08/06/react-static-html头部meta问题/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-06T06:47:57.000Z">
+          2020-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="事情起因"><a href="#事情起因" class="headerlink" title="事情起因"></a>事情起因</h4><p><code>react-static</code> 生成的项目默认有一个默认的 <code>html</code> 模板，目录： <code>tmp/dev-server</code> 。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">data-reactroot</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charSet</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然而，改这个文件然后 <code>yarn run build</code> 之后会发现，毫无变化。<br>找到官方文档，有这么一段说明：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// An optional custom React component that renders the base</span></span><br><span class="line"><span class="comment">// Document for every page, including the dev server. If used, it must utilize the</span></span><br><span class="line"><span class="comment">// `Html` , `Head` , `Body` and `children` for react-static to work. The optional</span></span><br><span class="line"><span class="comment">// `siteProps` prop will contain any data returned by `getSiteProps` in your config</span></span><br><span class="line"><span class="comment">// and `renderMeta` prop refers to any data you potentially assigned to it during</span></span><br><span class="line"><span class="comment">// the custom `renderToHtml` hook.</span></span><br><span class="line">Document: <span class="function">(<span class="params">&#123; Html, Head, Body, children, siteProps, renderMeta &#125;</span>) =&gt;</span> (</span><br><span class="line">  &lt;Html lang=<span class="string">&quot;en-US&quot;</span>&gt;</span><br><span class="line">    &lt;Head&gt;</span><br><span class="line">      &lt;meta charSet=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span><br><span class="line">      &lt;meta name=<span class="string">&quot;viewport&quot;</span> content=<span class="string">&quot;width=device-width, initial-scale=1&quot;</span> /&gt;</span><br><span class="line">    &lt;/Head&gt;</span><br><span class="line">    &lt;Body&gt;&#123;children&#125;&lt;/Body&gt;</span><br><span class="line">  &lt;/Html&gt;</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+
+<p>ok，开搞。  </p>
+<p>然而，事情并没有这么简单，加了这个配置后，问题又来了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exporting HTML across 4 threads...</span><br><span class="line">  ReferenceError: React is not defined</span><br></pre></td></tr></table></figure>
+
+<p>???<br>什么鬼？React-static里面没有引入React？开什么玩笑？<br>去网上找了找，并没有找到解决方案，倒是发现不少 <code>react-static</code> 的广告文。。。<br>得，只能自己动手。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>既然报了 <code>React is not defined</code> 错误，那我就个干脆手动引入吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>问题解决。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><code>react-static</code> 不自动引入 <code>React</code> ，也是醉了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/react-static/">react-static</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/08/06/nodejs递归遍历md文件/"><span>nodejs递归遍历md文件</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/08/06/nodejs递归遍历md文件/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-06T06:47:46.000Z">
+          2020-08-06
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>我的新版博客打算使用 <code>react-static</code> + <code>markdown</code> ，所以写了个递归遍历 <code>md</code> 文件的方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> id = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFileList</span>(<span class="params">dir, filesList = []</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 列出所有文件或目录</span></span><br><span class="line">    <span class="keyword">const</span> files = fs.readdirSync(dir);</span><br><span class="line">    <span class="comment">// 遍历</span></span><br><span class="line">    files.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 计算绝对路径</span></span><br><span class="line">        <span class="keyword">var</span> fullPath = path.join(dir, item);</span><br><span class="line">        <span class="comment">// 获取状态</span></span><br><span class="line">        <span class="keyword">const</span> stat = fs.statSync(fullPath);</span><br><span class="line">        <span class="comment">// 如果是目录</span></span><br><span class="line">        <span class="keyword">if</span> (stat.isDirectory()) &#123;</span><br><span class="line">            <span class="comment">// 递归</span></span><br><span class="line">            readFileList(path.join(dir, item), filesList);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 否则是文件 判断文件后缀名</span></span><br><span class="line">            <span class="keyword">if</span> (item.slice(<span class="number">-3</span>).toLowerCase() == <span class="string">&quot;.md&quot;</span>) &#123;</span><br><span class="line">                <span class="comment">// 文件分隔符</span></span><br><span class="line">                fullPath = fullPath.replace(<span class="regexp">/\\/g</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">                <span class="comment">// 分割</span></span><br><span class="line">                <span class="keyword">var</span> path_sp = fullPath.split(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">                <span class="comment">// 添加到列表</span></span><br><span class="line">                filesList.push(&#123;</span><br><span class="line">                    id: id++,</span><br><span class="line">                    userId: <span class="number">1</span>,</span><br><span class="line">                    title: item.slice(<span class="number">0</span>, <span class="number">-3</span>),</span><br><span class="line">                    year: path_sp[path_sp.length - <span class="number">3</span>],</span><br><span class="line">                    month: path_sp[path_sp.length - <span class="number">2</span>],</span><br><span class="line">                    path: fullPath,</span><br><span class="line">                    body: fs.readFileSync(fullPath).toString(),</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> filesList;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 实参</span></span><br><span class="line"><span class="keyword">var</span> blog_md_list = [];</span><br><span class="line"><span class="comment">// 递归遍历md文件</span></span><br><span class="line">readFileList(path.join(__dirname, <span class="string">&quot;public&quot;</span>, <span class="string">&quot;md&quot;</span>), blog_md_list);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/react-react-static-markdown/">react, react-static, markdown</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+
+
+  <article>
+
+  
+    
+    <h3 class="article-title"><a href="/2020/08/06/响应式布局/"><span>响应式布局</span></a></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
       <a href="/2020/08/06/响应式布局/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-06T02:19:44.000Z">
+        <time class="entry-date published" datetime="2020-08-06T06:47:24.000Z">
           2020-08-06
         </time>
       </a>
@@ -136,128 +258,6 @@
 
     
 
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/08/02/react-static html头部meta问题/"><span>react-static生成的html头部信息修改问题</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/08/02/react-static html头部meta问题/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-02T11:19:44.000Z">
-          2020-08-02
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <h4 id="事情起因"><a href="#事情起因" class="headerlink" title="事情起因"></a>事情起因</h4><p><code>react-static</code> 生成的项目默认有一个默认的 <code>html</code> 模板，目录： <code>tmp/dev-server</code> 。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">data-reactroot</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charSet</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>然而，改这个文件然后 <code>yarn run build</code> 之后会发现，毫无变化。<br>找到官方文档，有这么一段说明：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// An optional custom React component that renders the base</span></span><br><span class="line"><span class="comment">// Document for every page, including the dev server. If used, it must utilize the</span></span><br><span class="line"><span class="comment">// `Html` , `Head` , `Body` and `children` for react-static to work. The optional</span></span><br><span class="line"><span class="comment">// `siteProps` prop will contain any data returned by `getSiteProps` in your config</span></span><br><span class="line"><span class="comment">// and `renderMeta` prop refers to any data you potentially assigned to it during</span></span><br><span class="line"><span class="comment">// the custom `renderToHtml` hook.</span></span><br><span class="line">Document: <span class="function">(<span class="params">&#123; Html, Head, Body, children, siteProps, renderMeta &#125;</span>) =&gt;</span> (</span><br><span class="line">  &lt;Html lang=<span class="string">&quot;en-US&quot;</span>&gt;</span><br><span class="line">    &lt;Head&gt;</span><br><span class="line">      &lt;meta charSet=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span><br><span class="line">      &lt;meta name=<span class="string">&quot;viewport&quot;</span> content=<span class="string">&quot;width=device-width, initial-scale=1&quot;</span> /&gt;</span><br><span class="line">    &lt;/Head&gt;</span><br><span class="line">    &lt;Body&gt;&#123;children&#125;&lt;/Body&gt;</span><br><span class="line">  &lt;/Html&gt;</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
-
-<p>ok，开搞。  </p>
-<p>然而，事情并没有这么简单，加了这个配置后，问题又来了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exporting HTML across 4 threads...</span><br><span class="line">  ReferenceError: React is not defined</span><br></pre></td></tr></table></figure>
-
-<p>???<br>什么鬼？React-static里面没有引入React？开什么玩笑？<br>去网上找了找，并没有找到解决方案，倒是发现不少 <code>react-static</code> 的广告文。。。<br>得，只能自己动手。</p>
-<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>既然报了 <code>React is not defined</code> 错误，那我就个干脆手动引入吧。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>问题解决。</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><code>react-static</code> 不自动引入 <code>React</code> ，也是醉了。</p>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/react-static/">react-static</a>
-    </span>
-    
-
-    </div>
-
-    
-  </div>
-</article>
-
-
-
-  <article>
-
-  
-    
-    <h3 class="article-title"><a href="/2020/07/25/nodejs递归遍历md文件/"><span>nodejs遍历md文件，并生成博客列表</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2020/07/25/nodejs递归遍历md文件/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-07-25T02:19:44.000Z">
-          2020-07-25
-        </time>
-      </a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>我的新版博客打算使用 <code>react-static</code> + <code>markdown</code> ，所以写了个递归遍历 <code>md</code> 文件的方法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> id = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFileList</span>(<span class="params">dir, filesList = []</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 列出所有文件或目录</span></span><br><span class="line">    <span class="keyword">const</span> files = fs.readdirSync(dir);</span><br><span class="line">    <span class="comment">// 遍历</span></span><br><span class="line">    files.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 计算绝对路径</span></span><br><span class="line">        <span class="keyword">var</span> fullPath = path.join(dir, item);</span><br><span class="line">        <span class="comment">// 获取状态</span></span><br><span class="line">        <span class="keyword">const</span> stat = fs.statSync(fullPath);</span><br><span class="line">        <span class="comment">// 如果是目录</span></span><br><span class="line">        <span class="keyword">if</span> (stat.isDirectory()) &#123;</span><br><span class="line">            <span class="comment">// 递归</span></span><br><span class="line">            readFileList(path.join(dir, item), filesList);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 否则是文件 判断文件后缀名</span></span><br><span class="line">            <span class="keyword">if</span> (item.slice(<span class="number">-3</span>).toLowerCase() == <span class="string">&quot;.md&quot;</span>) &#123;</span><br><span class="line">                <span class="comment">// 文件分隔符</span></span><br><span class="line">                fullPath = fullPath.replace(<span class="regexp">/\\/g</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">                <span class="comment">// 分割</span></span><br><span class="line">                <span class="keyword">var</span> path_sp = fullPath.split(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">                <span class="comment">// 添加到列表</span></span><br><span class="line">                filesList.push(&#123;</span><br><span class="line">                    id: id++,</span><br><span class="line">                    userId: <span class="number">1</span>,</span><br><span class="line">                    title: item.slice(<span class="number">0</span>, <span class="number">-3</span>),</span><br><span class="line">                    year: path_sp[path_sp.length - <span class="number">3</span>],</span><br><span class="line">                    month: path_sp[path_sp.length - <span class="number">2</span>],</span><br><span class="line">                    path: fullPath,</span><br><span class="line">                    body: fs.readFileSync(fullPath).toString(),</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> filesList;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 实参</span></span><br><span class="line"><span class="keyword">var</span> blog_md_list = [];</span><br><span class="line"><span class="comment">// 递归遍历md文件</span></span><br><span class="line">readFileList(path.join(__dirname, <span class="string">&quot;public&quot;</span>, <span class="string">&quot;md&quot;</span>), blog_md_list);</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/react/">react</a>
-    </span>
     
 
     </div>
