@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{148:function(e,t,n){e.exports=n.p+"static/qr_logo.e823a2c3.jpg"},54:function(e,t,n){"use strict";n.r(t);var c=n(0),r=n.n(c);n(148);t.default=function(){return r.a.createElement("div",{style:{textAlign:"center"}},r.a.createElement("p",null,"The best way to predict the future is to create it."))}}}]);
