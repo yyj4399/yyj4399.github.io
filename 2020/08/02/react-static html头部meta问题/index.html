@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>react-static生成的html头部信息修改问题 | Hexo</title>
+
+  
+  <meta name="author" content="yyj4399">
+  
+
+  
+  <meta name="description" content="事情起因react-static 生成的项目默认有一个默认的 html 模板，目录： tmp/dev-server 。
+12345678910111213&amp;lt;!DOCTYPE html&amp;gt;&amp;lt;html lang=&amp;quot;en&amp;quot; data-reactroot=&amp;quot;&amp;q">
+  
+
+  
+  
+  <meta name="keywords" content="react-static">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="react-static生成的html头部信息修改问题"/>
+
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Hexo</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>react-static生成的html头部信息修改问题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/08/02/react-static html头部meta问题/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-02T11:19:44.000Z">
+          2020-08-02
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <h4 id="事情起因"><a href="#事情起因" class="headerlink" title="事情起因"></a>事情起因</h4><p><code>react-static</code> 生成的项目默认有一个默认的 <code>html</code> 模板，目录： <code>tmp/dev-server</code> 。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span> <span class="attr">data-reactroot</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charSet</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;root&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然而，改这个文件然后 <code>yarn run build</code> 之后会发现，毫无变化。<br>找到官方文档，有这么一段说明：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// An optional custom React component that renders the base</span></span><br><span class="line"><span class="comment">// Document for every page, including the dev server. If used, it must utilize the</span></span><br><span class="line"><span class="comment">// `Html` , `Head` , `Body` and `children` for react-static to work. The optional</span></span><br><span class="line"><span class="comment">// `siteProps` prop will contain any data returned by `getSiteProps` in your config</span></span><br><span class="line"><span class="comment">// and `renderMeta` prop refers to any data you potentially assigned to it during</span></span><br><span class="line"><span class="comment">// the custom `renderToHtml` hook.</span></span><br><span class="line">Document: <span class="function">(<span class="params">&#123; Html, Head, Body, children, siteProps, renderMeta &#125;</span>) =&gt;</span> (</span><br><span class="line">  &lt;Html lang=<span class="string">&quot;en-US&quot;</span>&gt;</span><br><span class="line">    &lt;Head&gt;</span><br><span class="line">      &lt;meta charSet=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span><br><span class="line">      &lt;meta name=<span class="string">&quot;viewport&quot;</span> content=<span class="string">&quot;width=device-width, initial-scale=1&quot;</span> /&gt;</span><br><span class="line">    &lt;/Head&gt;</span><br><span class="line">    &lt;Body&gt;&#123;children&#125;&lt;/Body&gt;</span><br><span class="line">  &lt;/Html&gt;</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+
+<p>ok，开搞。  </p>
+<p>然而，事情并没有这么简单，加了这个配置后，问题又来了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exporting HTML across 4 threads...</span><br><span class="line">  ReferenceError: React is not defined</span><br></pre></td></tr></table></figure>
+
+<p>???<br>什么鬼？React-static里面没有引入React？开什么玩笑？<br>去网上找了找，并没有找到解决方案，倒是发现不少 <code>react-static</code> 的广告文。。。<br>得，只能自己动手。</p>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><p>既然报了 <code>React is not defined</code> 错误，那我就个干脆手动引入吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">&quot;react&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>问题解决。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><code>react-static</code> 不自动引入 <code>React</code> ，也是醉了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/react-static/">react-static</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comment" class="comment">
+		<div id="gitalk-container"></div>
+	</section>
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var gitalk = new Gitalk({
+			clientID: 'ca011349a2326d617914',
+			clientSecret: '17407435fe9e2b0531bac07aa1010e9726e2a4d2',
+			repo: 'blog.yyj4399.com',
+			owner: 'yyj4399',
+			admin: ['yyj4399'],
+			id: location.pathname,
+			distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2020 yyj4399
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

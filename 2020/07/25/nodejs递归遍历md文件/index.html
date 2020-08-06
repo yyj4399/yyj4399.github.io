@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>nodejs遍历md文件，并生成博客列表 | Hexo</title>
+
+  
+  <meta name="author" content="yyj4399">
+  
+
+  
+  <meta name="description" content="我的新版博客打算使用 react-static + markdown ，所以写了个递归遍历 md 文件的方法。
+1234567891011121314151617181920212223242526272829303132333435363738394041var id = 0;function r">
+  
+
+  
+  
+  <meta name="keywords" content="react">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="nodejs遍历md文件，并生成博客列表"/>
+
+  <meta property="og:site_name" content="Hexo"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">Hexo</a>
+    </h1>
+    <p class="site-description"></p>
+  </div>
+  <nav class="site-navigation">
+    <ul>
+      
+    </ul>
+  </nav>
+</header>
+
+    <main class="site-main posts-loop">
+    <article>
+
+  
+    
+    <h3 class="article-title"><span>nodejs遍历md文件，并生成博客列表</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/2020/07/25/nodejs递归遍历md文件/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-07-25T02:19:44.000Z">
+          2020-07-25
+        </time>
+      </a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>我的新版博客打算使用 <code>react-static</code> + <code>markdown</code> ，所以写了个递归遍历 <code>md</code> 文件的方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> id = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readFileList</span>(<span class="params">dir, filesList = []</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 列出所有文件或目录</span></span><br><span class="line">    <span class="keyword">const</span> files = fs.readdirSync(dir);</span><br><span class="line">    <span class="comment">// 遍历</span></span><br><span class="line">    files.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 计算绝对路径</span></span><br><span class="line">        <span class="keyword">var</span> fullPath = path.join(dir, item);</span><br><span class="line">        <span class="comment">// 获取状态</span></span><br><span class="line">        <span class="keyword">const</span> stat = fs.statSync(fullPath);</span><br><span class="line">        <span class="comment">// 如果是目录</span></span><br><span class="line">        <span class="keyword">if</span> (stat.isDirectory()) &#123;</span><br><span class="line">            <span class="comment">// 递归</span></span><br><span class="line">            readFileList(path.join(dir, item), filesList);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 否则是文件 判断文件后缀名</span></span><br><span class="line">            <span class="keyword">if</span> (item.slice(<span class="number">-3</span>).toLowerCase() == <span class="string">&quot;.md&quot;</span>) &#123;</span><br><span class="line">                <span class="comment">// 文件分隔符</span></span><br><span class="line">                fullPath = fullPath.replace(<span class="regexp">/\\/g</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">                <span class="comment">// 分割</span></span><br><span class="line">                <span class="keyword">var</span> path_sp = fullPath.split(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">                <span class="comment">// 添加到列表</span></span><br><span class="line">                filesList.push(&#123;</span><br><span class="line">                    id: id++,</span><br><span class="line">                    userId: <span class="number">1</span>,</span><br><span class="line">                    title: item.slice(<span class="number">0</span>, <span class="number">-3</span>),</span><br><span class="line">                    year: path_sp[path_sp.length - <span class="number">3</span>],</span><br><span class="line">                    month: path_sp[path_sp.length - <span class="number">2</span>],</span><br><span class="line">                    path: fullPath,</span><br><span class="line">                    body: fs.readFileSync(fullPath).toString(),</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> filesList;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 实参</span></span><br><span class="line"><span class="keyword">var</span> blog_md_list = [];</span><br><span class="line"><span class="comment">// 递归遍历md文件</span></span><br><span class="line">readFileList(path.join(__dirname, <span class="string">&quot;public&quot;</span>, <span class="string">&quot;md&quot;</span>), blog_md_list);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/react/">react</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comment" class="comment">
+		<div id="gitalk-container"></div>
+	</section>
+	<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+	<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+	<script>
+		var gitalk = new Gitalk({
+			clientID: 'ca011349a2326d617914',
+			clientSecret: '17407435fe9e2b0531bac07aa1010e9726e2a4d2',
+			repo: 'blog.yyj4399.com',
+			owner: 'yyj4399',
+			admin: ['yyj4399'],
+			id: location.pathname,
+			distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
+    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
+    </br>
+    
+    &copy; 2020 yyj4399
+    
+  </p>
+</footer>
+    
+  </div>
+</div>
+</body>
+</html>

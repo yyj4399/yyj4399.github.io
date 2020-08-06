@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>test | Hexo</title>
+  <title>如何使用响应式布局 | Hexo</title>
 
   
   <meta name="author" content="yyj4399">
   
 
   
-  <meta name="description" content="测试页面">
+  <meta name="description" content="只需要在 css 文件中加入 @media 指令：
+12345@media (min-width: 600px) and (max-width: 900px) &amp;#123;    .body &amp;#123;        background-color: #aaa;    &amp;#125;&amp;#125;
+">
   
 
   
@@ -22,7 +24,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <meta property="og:title" content="test"/>
+  <meta property="og:title" content="如何使用响应式布局"/>
 
   <meta property="og:site_name" content="Hexo"/>
 
@@ -59,15 +61,15 @@
 
   
     
-    <h3 class="article-title"><span>test</span></h3>
+    <h3 class="article-title"><span>如何使用响应式布局</span></h3>
     
   
 
   <div class="article-top-meta">
     <span class="posted-on">
-      <a href="/2020/08/05/test/" rel="bookmark">
-        <time class="entry-date published" datetime="2020-08-05T02:19:44.000Z">
-          2020-08-05
+      <a href="/2020/08/06/响应式布局/" rel="bookmark">
+        <time class="entry-date published" datetime="2020-08-06T02:19:44.000Z">
+          2020-08-06
         </time>
       </a>
     </span>
@@ -79,7 +81,10 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>测试页面</p>
+        <p>只需要在 <code>css</code> 文件中加入 <code>@media</code> 指令：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> (<span class="attribute">min-width:</span> <span class="number">600px</span>) <span class="keyword">and</span> (<span class="attribute">max-width:</span> <span class="number">900px</span>) &#123;</span><br><span class="line">    <span class="selector-class">.body</span> &#123;</span><br><span class="line">        <span class="attribute">background-color</span>: <span class="number">#aaa</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在 <code>@media</code> 中设置样式。</p>
 
       
     </div>
